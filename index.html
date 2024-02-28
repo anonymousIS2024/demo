@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <meta name="description" content="HarmonixGAN">
+  <title>HarmonixGAN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
+  <link href="css/style.css" media="all" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="main">
+
+      <div class="paper_title">
+        <h1>Alias-Free Neural Waveform Synthesis with <br> 2D Complex Spectrogram Estimation and Harmonic Prior</h1>
+        <h2>Anonymous submission to Interspeech 2024</h2>
+      </div>
+
+      <h2 class="sectitle">Audio samples</h2>
+      <div id="samples" class="section">
+
+        <div class="selects">
+          <label for="set_id">Set ID</label>
+          <div class="simple_select">
+            <select required id="set_id" name="set_id">
+              <option value="set1" selected>Set1</option>
+              <option value="set2">Set2</option>
+              <option value="set3">Set3</option>
+            </select>
+          </div>
+
+          <div class=" button">
+            <input type="button" value="Apply" onclick="clickBtn()">
+          </div>
+        </div>
+
+        <script>
+          let utt_names = [
+            "jvs002_parallel100_VOICEACTRESS100_048.wav",
+            "jvs033_parallel100_VOICEACTRESS100_051.wav",
+            "jvs067_parallel100_VOICEACTRESS100_084.wav",
+            "jvs069_whisper10_VOICEACTRESS100_001.wav",
+            "jvs081_whisper10_BASIC5000_1695.wav",
+          ];
+
+          function clickBtn() {
+            var set_id = document.getElementById('set_id');
+            console.log(set_id);
+            set_id.options[set_id.selectedIndex].selected = true;
+            const methods = ["natural", "pwg", "pwg.a3", "hifigan", "hifigan.a3", "sifigan", "sifigan.a3", "harmonixgan1d.sine", "harmonixgan1d", "harmonixgan.sine", "harmonixgan"];
+            console.log(set_id.value, set_id.value === "set1");
+
+            if (set_id.value === "set1") {
+              utt_names = [
+                "jvs002_parallel100_VOICEACTRESS100_048",
+                "jvs033_parallel100_VOICEACTRESS100_051",
+                "jvs067_parallel100_VOICEACTRESS100_084",
+                "jvs069_whisper10_VOICEACTRESS100_001",
+                "jvs081_whisper10_BASIC5000_1695",
+              ];
+              console.log(utt_names);
+            } else if (set_id.value === "set2") {
+              utt_names = [
+                "jvs003_parallel100_VOICEACTRESS100_031",
+                "jvs028_parallel100_VOICEACTRESS100_012",
+                "jvs048_nonpara30_BASIC5000_0721",
+                "jvs078_parallel100_VOICEACTRESS100_027",
+                "jvs086_parallel100_VOICEACTRESS100_087",
+              ];
+            } else {
+              utt_names = [
+                "jvs001_falset10_BASIC5000_0235",
+                "jvs014_parallel100_VOICEACTRESS100_007",
+                "jvs065_falset10_BASIC5000_2139",
+                "jvs088_falset10_004",
+                "jvs090_falset10_VOICEACTRESS100_003"
+              ];
+            }
+
+            console.log(utt_names);
+            for (const m of methods) {
+              for (let i = 0; i < utt_names.length; ++i) {
+                document.getElementById(m + "_" + i).src = "samples/" + m + "/" + utt_names[i] + ".wav";
+              }
+            }
+          }
+        </script>
+
+        <table class="audio_table">
+          <thead>
+            <tr>
+              <th style="text-align: center" class="td_fixed">Model</th>
+              <th style="text-align: center">jvs002_parallel100_VOICEACTRESS100_048</th>
+              <th style="text-align: center">jvs033_parallel100_VOICEACTRESS100_051</th>
+              <th style="text-align: center">jvs067_parallel100_VOICEACTRESS100_084</th>
+              <th style="text-align: center">jvs069_whisper10_VOICEACTRESS100_001</th>
+              <th style="text-align: center">jvs081_whisper10_BASIC5000_1695</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">Natural</td>
+              <td style="text-align: center"><audio id="natural_0"
+                  src="samples/natural/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="natural_1"
+                  src="samples/natural/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="natural_2"
+                  src="samples/natural/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="natural_3"
+                  src="samples/natural/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="natural_4"
+                  src="samples/natural/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">PWG w/ ReLU</td>
+              <td style="text-align: center"><audio id="pwg_0"
+                  src="samples/pwg/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="pwg_1"
+                  src="samples/pwg/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="pwg_2"
+                  src="samples/pwg/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="pwg_3"
+                  src="samples/pwg/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="pwg_4" src="samples/pwg/jvs081_whisper10_BASIC5000_1695.wav"
+                  controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">PWG w/ ReLU (A3)</td>
+              <td style="text-align: center"><audio id="pwg.a3_0"
+                  src="samples/pwg.a3/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="pwg.a3_1"
+                  src="samples/pwg.a3/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="pwg.a3_2"
+                  src="samples/pwg.a3/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="pwg.a3_3"
+                  src="samples/pwg.a3/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="pwg.a3_4"
+                  src="samples/pwg.a3/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">HiFi-GAN</td>
+              <td style="text-align: center"><audio id="hifigan_0"
+                  src="samples/hifigan/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="hifigan_1"
+                  src="samples/hifigan/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="hifigan_2"
+                  src="samples/hifigan/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="hifigan_3"
+                  src="samples/hifigan/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="hifigan_4"
+                  src="samples/hifigan/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">HiFi-GAN (A3)</td>
+              <td style="text-align: center"><audio id="hifigan.a3_0"
+                  src="samples/hifigan.a3/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="hifigan.a3_1"
+                  src="samples/hifigan.a3/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="hifigan.a3_2"
+                  src="samples/hifigan.a3/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="hifigan.a3_3"
+                  src="samples/hifigan.a3/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="hifigan.a3_4"
+                  src="samples/hifigan.a3/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">SiFi-GAN</td>
+              <td style="text-align: center"><audio id="sifigan_0"
+                  src="samples/sifigan/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="sifigan_1"
+                  src="samples/sifigan/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="sifigan_2"
+                  src="samples/sifigan/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="sifigan_3"
+                  src="samples/sifigan/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="sifigan_4"
+                  src="samples/sifigan/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">SiFi-GAN (A3)</td>
+              <td style="text-align: center"><audio id="sifigan.a3_0"
+                  src="samples/sifigan.a3/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="sifigan.a3_1"
+                  src="samples/sifigan.a3/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="sifigan.a3_2"
+                  src="samples/sifigan.a3/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="sifigan.a3_3"
+                  src="samples/sifigan.a3/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="sifigan.a3_4"
+                  src="samples/sifigan.a3/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">HarmonixGAN-1D (Sine)</td>
+              <td style="text-align: center"><audio id="harmonixgan1d.sine_0"
+                  src="samples/harmonixgan1d.sine/jvs002_parallel100_VOICEACTRESS100_048.wav" controls=""
+                  preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan1d.sine_1"
+                  src="samples/harmonixgan1d.sine/jvs033_parallel100_VOICEACTRESS100_051.wav" controls=""
+                  preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan1d.sine_2"
+                  src="samples/harmonixgan1d.sine/jvs067_parallel100_VOICEACTRESS100_084.wav" controls=""
+                  preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan1d.sine_3"
+                  src="samples/harmonixgan1d.sine/jvs069_whisper10_VOICEACTRESS100_001.wav" controls=""
+                  preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan1d.sine_4"
+                  src="samples/harmonixgan1d.sine/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">HarmonixGAN-1D (Har.)</td>
+              <td style="text-align: center"><audio id="harmonixgan1d_0"
+                  src="samples/harmonixgan1d/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan1d_1"
+                  src="samples/harmonixgan1d/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan1d_2"
+                  src="samples/harmonixgan1d/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan1d_3"
+                  src="samples/harmonixgan1d/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan1d_4"
+                  src="samples/harmonixgan1d/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">HarmonixGAN-2D (Sine)</td>
+              <td style="text-align: center"><audio id="harmonixgan.sine_0"
+                  src="samples/harmonixgan.sine/jvs002_parallel100_VOICEACTRESS100_048.wav" controls=""
+                  preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan.sine_1"
+                  src="samples/harmonixgan.sine/jvs033_parallel100_VOICEACTRESS100_051.wav" controls=""
+                  preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan.sine_2"
+                  src="samples/harmonixgan.sine/jvs067_parallel100_VOICEACTRESS100_084.wav" controls=""
+                  preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan.sine_3"
+                  src="samples/harmonixgan.sine/jvs069_whisper10_VOICEACTRESS100_001.wav" controls=""
+                  preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan.sine_4"
+                  src="samples/harmonixgan.sine/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="text-align: left" class="td_fixed">HarmonixGAN-2D (Har.)</td>
+              <td style="text-align: center"><audio id="harmonixgan_0"
+                  src="samples/harmonixgan/jvs002_parallel100_VOICEACTRESS100_048.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan_1"
+                  src="samples/harmonixgan/jvs033_parallel100_VOICEACTRESS100_051.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan_2"
+                  src="samples/harmonixgan/jvs067_parallel100_VOICEACTRESS100_084.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan_3"
+                  src="samples/harmonixgan/jvs069_whisper10_VOICEACTRESS100_001.wav" controls="" preload=""></audio>
+              </td>
+              <td style="text-align: center"><audio id="harmonixgan_4"
+                  src="samples/harmonixgan/jvs081_whisper10_BASIC5000_1695.wav" controls="" preload=""></audio>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="sectitle">Suplemental figures</h2>
+      <div id="images" class="section">
+
+        <div class="images1">
+          <figure>
+            <img src="img/spectrograms.png" alt="Comparison of spectrograms" title="Comparison of spectrograms">
+            <figcaption>Comparison of spectrograms between natural speech and generated speech with high fundamental
+              frequency extrapolation. HiFi-GAN and SiFi-GAN exhibit blurred harmonics due to the effects of aliasing,
+              but
+              some improvement is observed with anti-aliased activation (A3) functions. PWG w/ ReLU shows almost no
+              harmonic distortion as it does not employ upsampling layers. The proposed method, HarmonixGAN, performs
+              well
+              even during extrapolation due to its aliasing-free design.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="images1">
+          <figure>
+            <img src="img/table.png" alt="Extended table" title="Extended table">
+            <figcaption>Experimental results across three F0 range divisions. The rows labeled A3, Prior,
+              Param, CPU, and GPU indicate the use of anti-aliased activation functions, the type of input periodic
+              signal, the number of learnable parameters, and real-time factors (RTF) on a single CPU with four threads
+              (AMD EPYC 7542) or a single GPU (GeForce RTX 3090), respectively. RTFs were averaged over 200 utterances.
+              The confidence intervals (CIs) of the mean opinion score (MOS) are omitted, but all were less than 0.052.
+              The highest MOS scores are highlighted in bold, and scores with CIs overlapping those of the highest
+              scores are underlined. Regarding the overall decrease in the MOS for Set1 and Set3, we observed that
+              whispered and falsetto voices, which are absent in Set2, tend to receive lower scores compared to normal
+              speech.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <h2 class="sectitle">References</h2>
+      <div id="references" class="section">
+        <ul>
+          <li>R. Yamamoto, E. Song, and J.-M. Kim, “Parallel Wavegan: A Fast
+            Waveform Generation Model Based on Generative Adversarial
+            Networks with Multi-Resolution Spectrogram,” in Proc. ICASSP,
+            2020, pp. 6199-6203.</li>
+          <li>J. Kong, J. Kim, and J. Bae, “HiFi-GAN: Generative Adversarial
+            Networks for Efficient and High Fidelity Speech Synthesis,” in
+            Proc. NeurIPS, vol. 33, 2020, pp. 17 022-17 033.</li>
+          <li>R. Yoneyama, Y.-C. Wu, and T. Toda, “Source-Filter HiFi-GAN: Fast and Pitch Controllable
+            High-Fidelity Neural Vocoder,” in Proc. ICASSP, 2023, pp. 1-5.</li>
+          <li>S. gil Lee, W. Ping, B. Ginsburg, B. Catanzaro, S. Yoon, “BigVGAN: A Universal
+            Neural Vocoder with Large-Scale Training,” in Proc. ICLR, 2023.</li>
+          <li>T. Saeki, D. Xin, W. Nakata, T. Koriyama, S. Takamichi, H. Saruwatari, “UTMOS: UTokyo-SaruLab
+            System for VoiceMOS Challenge 2022,” in Proc. Interspeech, 2022, pp. 4521-4525.</li>
+        </ul>
+      </div>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script type='text/javascript' src="js/script.js"></script>
+</body>
+
+</html>

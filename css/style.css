@@ -1,0 +1,271 @@
+@import url(sanitize.css);
+@import url(ress.css);
+
+body {
+  /* font-family: "Montserrat"; */
+  font-size: 14px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.8;
+  letter-spacing: 0.8px;
+  color: #222;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.main {
+  width: 90%;
+  margin: 0 auto;
+  padding: 25px 0;
+  background-color: #ffffff;
+}
+
+.main a:hover {
+  text-decoration: underline;
+}
+
+.section {
+  background-color: #ffffff;
+}
+
+.sectitle {
+  margin: 50px 0 20px 0;
+  position: relative;
+  font-weight: bold;
+}
+
+figure {
+  display: flex;
+  flex-flow: column;
+  border: thin #c0c0c0 solid;
+  padding: 5px;
+}
+
+figcaption {
+  background-color: #222;
+  color: #ffffff;
+  font: italic smaller sans-serif;
+  padding: 3px;
+  margin-top: auto;
+  text-align: center;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+  padding-bottom: 5px;
+}
+
+.images2 {
+  display: flex;
+  justify-content: center;
+  padding: 0 1%;
+  margin: 5px 0;
+}
+
+.images2>figure {
+  margin: 0 auto;
+  width: 49%;
+}
+
+.images1 {
+  display: flex;
+  justify-content: center;
+  margin: 5px 0;
+}
+
+.images1>figure {
+  margin: 0 auto;
+  width: 95%;
+}
+
+.images1 img {
+  max-width: 97%;
+  height: auto;
+}
+
+/*--------------------------------
+ Header
+---------------------------------*/
+header {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  padding-top: 5px;
+  background-color: #ffffff;
+  border-bottom: solid 1px #222;
+}
+
+header h2 {
+  font-weight: bold;
+}
+
+/*--------------------------------
+ Paper info
+---------------------------------*/
+.paper_title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.paper_title h1 {
+  margin-bottom: 5px;
+}
+
+/*--------------------------------
+ Demo
+---------------------------------*/
+
+ul {
+  margin-left: 15px;
+}
+
+.selects {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.selects label {
+  font-weight: bolder;
+}
+
+.simple_select {
+  position: relative;
+  border: 1px solid #222;
+  border-radius: 2px;
+  background: #ffffff;
+}
+
+.simple_select select {
+  padding: 8px 38px 8px 8px;
+  width: 100%;
+  padding-right: 1em;
+  cursor: pointer;
+  text-indent: 0.01px;
+  text-overflow: ellipsis;
+  border: none;
+  outline: none;
+  background: transparent;
+  background-image: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.simple_select select::-ms-expand {
+  display: none;
+}
+
+.simple_select::before {
+  position: absolute;
+  top: 0.8em;
+  right: 0.9em;
+  width: 0;
+  height: 0;
+  padding: 0;
+  content: '';
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #222;
+  pointer-events: none;
+}
+
+.simple_select:after {
+  position: absolute;
+  top: 0;
+  right: 2.5em;
+  bottom: 0;
+  width: 1px;
+  content: '';
+  border-left: 1px solid #222;
+}
+
+.button {
+  margin: 10px 0 15px 0;
+  text-align: center;
+}
+
+.button input {
+  display: inline-block;
+  border-radius: 10%;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 0.8em;
+  transition: .1s;
+  border: 1px solid #222;
+}
+
+.button input:hover {
+  color: #ffffff;
+  background: #222;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  display: block;
+  overflow-x: scroll;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  width: 97%;
+  margin: 0 auto;
+}
+
+table th,
+table td {
+  background-color: #ffffff;
+  border-right: 1px solid #444;
+  border-bottom: 1px solid #444;
+  padding: 10px;
+  white-space: nowrap;
+}
+
+table tr:first-child th,
+table tr:first-child td {
+  border-top: 1px solid #444;
+  padding: 10px;
+}
+
+table th:first-child,
+table td:first-child {
+  border-left: 1px solid #444;
+  padding: 10px;
+}
+
+table .td_fixed {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: #ffffff;
+
+  /*--------------------------------
+ Page-top
+---------------------------------*/
+  .page-top {
+    margin-top: 50px;
+    border-top: 1px solid #222;
+    padding: 7px 0;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .page-top .material-icons-outlined {
+    vertical-align: bottom;
+    color: #222;
+  }
