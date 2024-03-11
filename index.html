@@ -18,7 +18,8 @@
     <div class="main">
 
       <div class="paper_title">
-        <h1>Alias-Free Neural Waveform Synthesis with <br> 2D Complex Spectrogram Estimation and Harmonic Prior</h1>
+        <h1>HarmonixGAN: Alias-Free Neural Waveform Synthesis Based on <br> Complex Spectrogram Estimation with 2D
+          Convolution and Harmonic Prior</h1>
         <h2>Anonymous submission to Interspeech 2024</h2>
       </div>
 
@@ -331,14 +332,12 @@
 
         <div class="images1">
           <figure>
-            <img src="img/spectrograms.png" alt="Comparison of spectrograms" title="Comparison of spectrograms">
-            <figcaption>Comparison of spectrograms between natural speech and generated speech with high fundamental
-              frequency extrapolation. HiFi-GAN and SiFi-GAN exhibit blurred harmonics due to the effects of aliasing,
-              but
-              some improvement is observed with anti-aliased activation (A3) functions. PWG w/ ReLU shows almost no
-              harmonic distortion as it does not employ upsampling layers. The proposed method, HarmonixGAN, performs
-              well
-              even during extrapolation due to its aliasing-free design.
+            <img src="img/f0_dist.png" style="max-width: 55%;" alt="F0 histogram" title="F0 histogram">
+            <figcaption>Histogram displaying the distribution of F0 values within the Japanese versatile speech (JVS)
+              corpus. The horizontal axis represents F0 values in logarithmic scale hertz, and the vertical axis
+              represents the total number of frames across all utterances. Utterances falling within the red-tailed F0
+              value ranges were omitted from the training dataset, which thus consists exclusively of values within the
+              central blue range.
             </figcaption>
           </figure>
         </div>
@@ -358,6 +357,21 @@
             </figcaption>
           </figure>
         </div>
+      </div>
+
+      <div class="images1">
+        <figure>
+          <img src="img/spectrograms.png" style="max-width: 90%;" alt="Comparison of spectrograms"
+            title="Comparison of spectrograms">
+          <figcaption>Comparison of spectrograms between natural speech and generated speech with high fundamental
+            frequency extrapolation. HiFi-GAN and SiFi-GAN exhibit blurred harmonics due to the effects of aliasing,
+            but
+            some improvement is observed with anti-aliased activation (A3) functions. PWG w/ ReLU shows almost no
+            harmonic distortion as it does not employ upsampling layers. The proposed method, HarmonixGAN, performs
+            well
+            even during extrapolation due to its aliasing-free design.
+          </figcaption>
+        </figure>
       </div>
 
       <h2 class="sectitle">References</h2>
